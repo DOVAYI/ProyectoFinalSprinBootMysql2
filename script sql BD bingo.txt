@@ -1,0 +1,18 @@
+CREATE DATABASE juego;
+
+CREATE TABLE `juego`.`jugador` ( `idj` VARCHAR(200) NOT NULL , `idb` INT(10) NULL DEFAULT NULL , PRIMARY KEY (`idj`)) ENGINE = InnoDB; 
+
+CREATE TABLE `juego`.`numerosj` ( `idnj` INT(10) NOT NULL AUTO_INCREMENT , `b` INT(5) NOT NULL , `i` INT(5) NOT NULL , 
+`n` INT(5) NOT NULL , `g` INT(5) NOT NULL , `o` INT(5) NOT NULL , `idj` VARCHAR(200) NOT NULL , PRIMARY KEY (`idnj`)) ENGINE = InnoDB; 
+
+ALTER TABLE `juego`.`numerosj` ADD FOREIGN KEY (`idj`) REFERENCES `jugador`(`idj`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
+
+CREATE TABLE `juego`.`bingo` ( `idb` INT(10) NOT NULL AUTO_INCREMENT , `estado` VARCHAR(50) NOT NULL , `ganador` VARCHAR(100) NOT NULL , 
+PRIMARY KEY (`idb`)) ENGINE = InnoDB; 
+
+ALTER TABLE `juego`.`jugador` ADD FOREIGN KEY (`idb`) REFERENCES `bingo`(`idb`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
+
+CREATE TABLE `juego`.`numerosb` ( `idnb` INT(10) NOT NULL AUTO_INCREMENT , `numeros` INT(5) NOT NULL , `letra` VARCHAR(5) NOT NULL ,
+ `idb` INT(10) NOT NULL , PRIMARY KEY (`idnb`)) ENGINE = InnoDB; 
+
+ALTER TABLE `juego`.`numerosb` ADD FOREIGN KEY (`idb`) REFERENCES `bingo`(`idb`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
