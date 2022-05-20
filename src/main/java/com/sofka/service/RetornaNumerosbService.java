@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class RetornaNumerosbService {
@@ -20,10 +22,13 @@ public class RetornaNumerosbService {
 
     private Numerosb numerosb;
 
+    private Integer idBing;
+
     public void createNumberBingo(Integer number) {
-        Integer idBing = idBingo();
+        idBing = idBingo();
         Bingo bingo = bingodao.getBingo(idBing);
         if (bingo.getIdb() > 0 && bingo.getIdb() != null) {
+            log.info("metodo createNumberBingo service RetornaNumerosbService " );
             numerosb = new Numerosb();
             numerosb.setNumeros(number);
             numerosb.setBingo(bingo);
@@ -31,9 +36,14 @@ public class RetornaNumerosbService {
 
         }
 
-
     }
 
+    public List<Numerosb> loadNumberBingo(){
+        idBing = idBingo();
+        List<Numerosb> numerosb=null;
+        numerosb=numerosbdao.numberRandomBingo(idBing);
+        return numerosb;
+    }
 
     private Integer idBingo() {
         Integer idbingo = 0;

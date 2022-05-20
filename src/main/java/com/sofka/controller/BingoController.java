@@ -38,31 +38,37 @@ public class BingoController {
     @Autowired
     private RetornaNumerosbService retornaNumerosbService;
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(path = "/numerosbingo")
+    public List<Numerosb> loadBingoNumber() {
+        List<Numerosb> numberBingo = null;
+        numberBingo = retornaNumerosbService.loadNumberBingo();
+
+        return numberBingo;
+    }
 
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping(path="/buscarjuego")
-    public String getEstado(){
-        String estado=bingoService.getEstado();
-        log.info("prueba"+estado);
+    @GetMapping(path = "/buscarjuego")
+    public String getEstado() {
+        String estado = bingoService.getEstado();
+        log.info("prueba" + estado);
 
         return estado;
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping(path="/buscarjuego2")
-    public String getEstado2(){
-        String estado=retornaNumerosbService.getEstado2();
-        log.info("prueba 2 "+estado);
+    @GetMapping(path = "/buscarjuego2")
+    public String getEstado2() {
+        String estado = retornaNumerosbService.getEstado2();
+        log.info("prueba 2 " + estado);
 
         return estado;
     }
-
-
 
 
     @Transactional(readOnly = true)
-    public List<Numerosj> cargarNUmerosJugador( String idjugador) {
+    public List<Numerosj> cargarNUmerosJugador(String idjugador) {
         return retornanumeroService.getListNumerosJugador(idjugador);
     }
 
@@ -71,22 +77,23 @@ public class BingoController {
     @PostMapping(path = "/crearbingo")
     public List<Numerosj> create(@RequestBody String idJugador) {
         List<Numerosj> numerosj = null;
-        log.info("prueba"+idJugador);
+        log.info("prueba" + idJugador);
         String newIdjugador = Restructurar.restructurar(idJugador);
-        log.info("prueba2"+newIdjugador);
+        log.info("prueba2" + newIdjugador);
         Bingo bingo = bingoService.crearBingo(newIdjugador);
         if (bingo.getIdb() > 0 && bingo.getIdb() != null) {
             numerosj = cargarNUmerosJugador(newIdjugador);
         }
         return numerosj;
     }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(path = "/crearjugador")
     public List<Numerosj> createGamers(@RequestBody String idJugador) {
         List<Numerosj> numerosj = null;
-        log.info("prueba"+idJugador);
+        log.info("prueba" + idJugador);
         String newIdjugador = Restructurar.restructurar(idJugador);
-        log.info("prueba2"+newIdjugador);
+        log.info("prueba2" + newIdjugador);
         Jugador jugad = bingoService.crearJugador2(newIdjugador);
         if (!(jugad.getIdj().equals(" ")) && jugad.getIdj() != null) {
             numerosj = cargarNUmerosJugador(newIdjugador);
@@ -94,11 +101,5 @@ public class BingoController {
         return numerosj;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping(path = "/numerosbingo")
-    public void createNumberBingo(@RequestBody String valor) {
-        int newNumber=Integer.parseInt(Restructurar.restructurar(valor));
-        retornaNumerosbService.createNumberBingo(newNumber);
 
-    }
 }

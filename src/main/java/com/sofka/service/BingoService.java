@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,10 +30,17 @@ public class BingoService {
     @Autowired
     private numerosjDao numerosjdao;
 
+    @Autowired
+    private RetornaNumerosbService retornaNumerosbService;
+
     private Timer timer;
+
+    private Timer timerNumberBingo;
     private Integer contador = 0;
 
+    private Integer randomNum;
 
+    private ArrayList<Integer> array = new ArrayList<>();
 
 
     @Transactional
@@ -107,22 +115,53 @@ public class BingoService {
 
 
         timer = new Timer();
-        timer.schedule(tarea, 0, 60000);
-
+        timer.schedule(gameStartTimeout, 0, 60000);
 
 
     }
 
-    TimerTask tarea  = new TimerTask() {
+    TimerTask gameStartTimeout = new TimerTask() {
         @Override
         public void run() {
             contador++;
             log.info("pasaron  minutos" + contador);
             if (contador == 3) {
                 actualizarEstado();
+                createNumberBingo();
                 timer.cancel();
 
             }
+        }
+    };
+
+    private void createNumberBingo() {
+        timerNumberBingo = new Timer();
+        timerNumberBingo.schedule(createNumberRandomBingo, 0, 15000);
+        log.info("Bingo service metodo createNumberBingo");
+    }
+
+    TimerTask createNumberRandomBingo = new TimerTask() {
+        @Override
+        public void run() {
+            log.info("Bingo service tarea createNumberRandom 1");
+            randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
+            if (array.size() < 1) {
+                array.add(randomNum);
+                retornaNumerosbService.createNumberBingo(randomNum);
+            } else {
+                while ((array.indexOf(randomNum) != -1)) {
+                    randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
+                }
+                if (randomNum > 0) {
+                    if ((array.indexOf(randomNum) == -1)) {
+                        retornaNumerosbService.createNumberBingo(randomNum);
+                        array.add(randomNum);
+
+
+                    }
+                }
+            }
+
         }
     };
 
@@ -172,7 +211,6 @@ public class BingoService {
         return status;
 
     }
-
 
 
 }
