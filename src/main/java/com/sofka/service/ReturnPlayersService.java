@@ -13,6 +13,7 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -21,9 +22,9 @@ public class ReturnPlayersService {
     @Autowired
     private jugadorDao jugadordao;
 
-    private List<PlayersModel> todoPlayers= new ArrayList<>();
+    private List<PlayersModel> todoPlayers = new ArrayList<>();
 
-    public List<String> loadIdPlayers() {
+    private List<String> loadIdPlayers() {
         List<String> idPlayers = null;
         try {
             idPlayers = jugadordao.getIdPlayer("pendiente", "iniciado");
@@ -35,15 +36,46 @@ public class ReturnPlayersService {
         return idPlayers;
     }
 
-    public void loadDatasPlayers(){
-        RestTemplate restTemplate=new RestTemplate();
-        RestTemplateBuilder restTemplateBuilder=new RestTemplateBuilder();
-        restTemplate=restTemplateBuilder.build();
+    public List<PlayersModel> showDataPlayers() {
+        List<PlayersModel> dataUserMongo = loadDatasPlayers();
+        List<String> idPlayersInSql = loadIdPlayers();
+        for (int i = 0; i < idPlayersInSql.size(); i++) {
+            int j = 0;
+            while (j < dataUserMongo.size()) {
+                if (idPlayersInSql.get(i).equals(dataUserMongo.get(j).get_id())) {
+                    todoPlayers.add(dataUserMongo.get(j));
+                    j = dataUserMongo.size() - 1;
+                }
+                j++;
+            }
+        }
 
-        PlayersModel[] playersModel=restTemplate.getForObject("http://localhost:4001/players",PlayersModel[].class);
+        return todoPlayers;
+    }
+
+    private List<PlayersModel> loadDatasPlayers() {
+        PlayersModel[] playersModel = null;
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+            restTemplate = restTemplateBuilder.build();
+
+            playersModel = restTemplate.getForObject(
+                    "http://localhost:4001/players", PlayersModel[].class);
 
 
-        log.info("prueba1 "+playersModel[0].get_id());
-        log.info("prueba2 "+playersModel[1].get_id());
+            log.info("prueba1 " + playersModel[0].get_id());
+            log.info("prueba2 " + playersModel[1].get_id());
+
+        } catch (HttpClientErrorException ec) {
+            log.info(ec.getMessage());
+        } catch (HttpServerErrorException es) {
+            log.info(es.getMessage());
+        } catch (UnknownHttpStatusCodeException eu) {
+            log.info(eu.getMessage());
+        }
+
+
+        return Arrays.asList(playersModel);
     }
 }
