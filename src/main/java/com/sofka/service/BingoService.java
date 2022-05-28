@@ -42,7 +42,7 @@ public class BingoService {
 
     private ArrayList<Integer> array = new ArrayList<>();
 
-    private Integer idBingoGlobal;
+
 
 
     @Transactional
@@ -56,21 +56,13 @@ public class BingoService {
 
         if (bingo2.getIdb() > 0 && bingo2.getIdb() != null) {
             crearJugador(idJugador, bingo2);
-            setIdBingoGlobal(bingo2.getIdb());
-
         }
 
         return bingo2;
 
     }
 
-    public Integer getIdBingoGlobal() {
-        return idBingoGlobal;
-    }
 
-    public void setIdBingoGlobal(Integer idBingoGlobal) {
-        this.idBingoGlobal = idBingoGlobal;
-    }
 
     @Transactional
     public Jugador crearJugador2(String idJugador) {
@@ -133,7 +125,7 @@ public class BingoService {
 
     private void updatStatus() {
         timer = new Timer();
-        timer.schedule(gameStartTimeout, 0, 20000);
+        timer.schedule(gameStartTimeout, 0, 60000);
 
 
     }
@@ -242,8 +234,11 @@ public class BingoService {
     @Transactional
     public Bingo getDataBingo() {
         Bingo dataBingo = null;
+        Integer idBingo=0;
         try {
-            dataBingo = bingodao.getBingo(getIdBingoGlobal());
+            idBingo=bingodao.getIdBingo2("finalizado");
+            log.info("este es el idBingo: "+idBingo);
+            dataBingo = bingodao.getBingo(idBingo);
         } catch (Exception e) {
             log.info(e.getMessage());
         }

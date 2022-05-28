@@ -20,6 +20,9 @@ public interface bingoDao extends CrudRepository<Bingo, Integer> {
     @Query("select b from Bingo b  where b.idb=:idb")
     public Bingo getBingo(@Param(value = "idb") Integer idb);
 
+    @Query("select max(b2.idb) from Bingo b2 where b2.estado=:estado")
+    public Integer getIdBingo2(@Param(value = "estado") String estado);
+
     @Transactional
     @Modifying
     @Query("update Bingo b set b.estado=:newEstado where b.estado=:estado")

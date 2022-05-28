@@ -66,10 +66,14 @@ public class RetornaNumerosbService {
     @Transactional(readOnly = true)
     public String getEstado2() {
         String status = null;
-        status = bingodao.getEstadoJuego("iniciado","finalizado");
+        status = bingodao.getEstadoJuego("iniciado","");
         log.info("prueba numeros b service " + status);
         if (status == null) {
-            status = "vacio";
+            status = bingodao.getEstadoJuego("","finalizado");
+            if(status==null){
+                status = "vacio";
+            }
+
 
         }
 
