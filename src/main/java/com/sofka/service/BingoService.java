@@ -42,6 +42,8 @@ public class BingoService {
 
     private ArrayList<Integer> array = new ArrayList<>();
 
+    private Integer idBingoGlobal;
+
 
     @Transactional
     public Bingo crearBingo(String idJugador) {
@@ -54,12 +56,20 @@ public class BingoService {
 
         if (bingo2.getIdb() > 0 && bingo2.getIdb() != null) {
             crearJugador(idJugador, bingo2);
-
+            setIdBingoGlobal(bingo2.getIdb());
 
         }
 
         return bingo2;
 
+    }
+
+    public Integer getIdBingoGlobal() {
+        return idBingoGlobal;
+    }
+
+    public void setIdBingoGlobal(Integer idBingoGlobal) {
+        this.idBingoGlobal = idBingoGlobal;
     }
 
     @Transactional
@@ -89,6 +99,16 @@ public class BingoService {
         return idbingo;
     }
 
+    public Integer getIdBingoStatusIniciado() {
+        Integer idBingo = 0;
+        try {
+            idBingo = bingodao.getIdBingo("iniciado");
+        } catch (Exception e) {
+
+        }
+        return idBingo;
+    }
+
     @Transactional
     public Jugador crearJugador(String idJugador, Bingo bingo) {
         GenerarNumerosAleatorios numerosAleatorios =
@@ -112,10 +132,8 @@ public class BingoService {
     }
 
     private void updatStatus() {
-
-
         timer = new Timer();
-        timer.schedule(gameStartTimeout, 0, 60000);
+        timer.schedule(gameStartTimeout, 0, 20000);
 
 
     }
@@ -124,7 +142,7 @@ public class BingoService {
         @Override
         public void run() {
             contador++;
-            log.info("pasaron  minutos" + contador);
+
             if (contador == 3) {
                 actualizarEstado();
                 createNumberBingo();
@@ -144,29 +162,38 @@ public class BingoService {
         @Override
         public void run() {
             log.info("Bingo service tarea createNumberRandom 1");
-            randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
-            if (array.size() < 1) {
-                array.add(randomNum);
-                retornaNumerosbService.createNumberBingo(randomNum);
-            } else {
-                while ((array.indexOf(randomNum) != -1)) {
-                    randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
-                }
-                if (randomNum > 0) {
-                    if ((array.indexOf(randomNum) == -1)) {
-                        retornaNumerosbService.createNumberBingo(randomNum);
-                        array.add(randomNum);
+            String status = bingodao.getEstadoJuego("","iniciado");
+            if (status.equals("iniciado")) {
+                randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
+                if (array.size() < 1) {
+                    array.add(randomNum);
+                    retornaNumerosbService.createNumberBingo(randomNum);
+                } else {
+                    while ((array.indexOf(randomNum) != -1)) {
+                        randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
+                    }
+                    if (randomNum > 0) {
+                        if ((array.indexOf(randomNum) == -1)) {
+                            retornaNumerosbService.createNumberBingo(randomNum);
+                            array.add(randomNum);
 
 
+                        }
                     }
                 }
-            }
 
+            }else{
+                timerNumberBingo.cancel();
+            }
         }
     };
 
     public void actualizarEstado() {
         bingodao.updateStatus("iniciado", "pendiente");
+    }
+
+    public void updateStatusBingoFinal(String winner) {
+        bingodao.updateStatus2(winner, "finalizado", "iniciado");
     }
 
     @Transactional
@@ -201,7 +228,7 @@ public class BingoService {
     @Transactional(readOnly = true)
     public String getEstado() {
         String status = null;
-        status = bingodao.getEstadoJuego("pendiente");
+        status = bingodao.getEstadoJuego("pendiente","iniciado");
         log.info("prueba" + status);
         if (status == null) {
             status = "vacio";
@@ -210,6 +237,17 @@ public class BingoService {
 
         return status;
 
+    }
+
+    @Transactional
+    public Bingo getDataBingo() {
+        Bingo dataBingo = null;
+        try {
+            dataBingo = bingodao.getBingo(getIdBingoGlobal());
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return dataBingo;
     }
 
 

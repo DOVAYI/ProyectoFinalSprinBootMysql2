@@ -42,7 +42,12 @@ public class BingoController {
     @GetMapping(path = "/numerosbingo")
     public List<Numerosb> loadBingoNumber() {
         List<Numerosb> numberBingo = null;
-        numberBingo = retornaNumerosbService.loadNumberBingo();
+        try {
+            numberBingo = retornaNumerosbService.loadNumberBingo();
+        } catch (Exception e) {
+            log.info("erro en metodo loadBingoNumber " + e.getMessage());
+        }
+
 
         return numberBingo;
     }
@@ -66,6 +71,21 @@ public class BingoController {
         return estado;
     }
 
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(path = "/buscardatosjuego")
+    public Bingo getDatasBingo() {
+        Bingo dataBingo = null;
+
+        try {
+
+            dataBingo = bingoService.getDataBingo();
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+
+        return dataBingo;
+    }
 
     @Transactional(readOnly = true)
     public List<Numerosj> cargarNUmerosJugador(String idjugador) {
@@ -101,5 +121,19 @@ public class BingoController {
         return numerosj;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping(path = "/finalizarjuego")
+    public Integer  finalPlayBingo(@RequestBody String ganador) {
 
+        Integer idBingo=0;
+        String winner=Restructurar.restructurar(ganador);
+        try {
+            idBingo=bingoService.getIdBingoStatusIniciado();
+            bingoService.updateStatusBingoFinal(winner);
+        } catch (Exception e) {
+            log.info("Error en finalizar juego ");
+        }
+
+        return idBingo;
+    }
 }

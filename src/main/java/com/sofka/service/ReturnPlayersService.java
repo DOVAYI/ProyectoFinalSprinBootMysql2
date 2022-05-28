@@ -55,7 +55,7 @@ public class ReturnPlayersService {
 
     private List<PlayersModel> loadDatasPlayers() {
         PlayersModel[] playersModel = null;
-        try {
+
             RestTemplate restTemplate = new RestTemplate();
             RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
             restTemplate = restTemplateBuilder.build();
@@ -67,13 +67,7 @@ public class ReturnPlayersService {
             log.info("prueba1 " + playersModel[0].get_id());
             log.info("prueba2 " + playersModel[1].get_id());
 
-        } catch (HttpClientErrorException ec) {
-            log.info(ec.getMessage());
-        } catch (HttpServerErrorException es) {
-            log.info(es.getMessage());
-        } catch (UnknownHttpStatusCodeException eu) {
-            log.info(eu.getMessage());
-        }
+
 
 
         return Arrays.asList(playersModel);

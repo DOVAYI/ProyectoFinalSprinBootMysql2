@@ -28,7 +28,7 @@ public class RetornaNumerosbService {
         idBing = idBingo();
         Bingo bingo = bingodao.getBingo(idBing);
         if (bingo.getIdb() > 0 && bingo.getIdb() != null) {
-            log.info("metodo createNumberBingo service RetornaNumerosbService " );
+            log.info("metodo createNumberBingo service RetornaNumerosbService ");
             numerosb = new Numerosb();
             numerosb.setNumeros(number);
             numerosb.setBingo(bingo);
@@ -37,17 +37,27 @@ public class RetornaNumerosbService {
         }
 
     }
+    @Transactional(readOnly = true)
+    public List<Numerosb> loadNumberBingo() {
+        List<Numerosb> numerosb = null;
+        try {
+            idBing = idBingo();
+            numerosb = numerosbdao.numberRandomBingo(idBing);
+        } catch (Exception e) {
 
-    public List<Numerosb> loadNumberBingo(){
-        idBing = idBingo();
-        List<Numerosb> numerosb=null;
-        numerosb=numerosbdao.numberRandomBingo(idBing);
+        }
+
         return numerosb;
     }
-
+    @Transactional(readOnly = true)
     private Integer idBingo() {
         Integer idbingo = 0;
-        idbingo = bingodao.getIdBingo("iniciado");
+        try {
+            idbingo = bingodao.getIdBingo("iniciado");
+        } catch (Exception e) {
+
+        }
+
         log.info("prueba numeros b service idbingo " + idbingo);
 
         return idbingo;
@@ -56,7 +66,7 @@ public class RetornaNumerosbService {
     @Transactional(readOnly = true)
     public String getEstado2() {
         String status = null;
-        status = bingodao.getEstadoJuego("iniciado");
+        status = bingodao.getEstadoJuego("iniciado","finalizado");
         log.info("prueba numeros b service " + status);
         if (status == null) {
             status = "vacio";
