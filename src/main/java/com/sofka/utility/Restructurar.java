@@ -1,7 +1,17 @@
 package com.sofka.utility;
 
+/**
+ * esta clase permite Restructar id y otros
+ * tiene un metodo estatico que puede ser accedido sin necesidad de instanciar
+ * ejemplo Restructurar.restructurar(parametro)
+ */
 public class Restructurar {
 
+    /**
+     * Este metodo elimina comillas y otros
+     * @param valor idjugador y/o otros datos
+     * @return
+     */
     public static String restructurar(String valor){
         String vector[];
         String aux1 = valor;

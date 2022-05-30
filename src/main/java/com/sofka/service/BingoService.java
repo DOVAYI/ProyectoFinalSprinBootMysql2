@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
+/**
+ * Esta clase Brinda los servcicos relacionados con el bingo
+ */
 @Slf4j
 @Service
 public class BingoService {
@@ -43,8 +45,11 @@ public class BingoService {
     private ArrayList<Integer> array = new ArrayList<>();
 
 
-
-
+    /**
+     * este metodo permite crear bingo
+     * @param idJugador
+     * @return
+     */
     @Transactional
     public Bingo crearBingo(String idJugador) {
         Bingo bingo = new Bingo();
@@ -63,7 +68,11 @@ public class BingoService {
     }
 
 
-
+    /**
+     * Este metodo permite crear jugador
+     * @param idJugador
+     * @return
+     */
     @Transactional
     public Jugador crearJugador2(String idJugador) {
         Integer matrizNumerosJugador[][] = new Integer[5][5];
@@ -123,38 +132,54 @@ public class BingoService {
         return jugador2;
     }
 
+    /**
+     * este metodo permite actualizar estado juego de pendiente a iniciado
+     * al tanscurrir 1 minuto, despues de crarse el juego
+     */
     private void updatStatus() {
         timer = new Timer();
-        timer.schedule(gameStartTimeout, 0, 60000);
+        timer.schedule(gameStartTimeout, 0, 20000);
 
 
     }
 
+    /**
+     * esta tarea de ejucuta cada 20 segundos al entrar 3 veces actualiza estado
+     */
     TimerTask gameStartTimeout = new TimerTask() {
         @Override
         public void run() {
-            contador++;
 
+            contador++;
             if (contador == 3) {
                 actualizarEstado();
                 createNumberBingo();
                 timer.cancel();
-
             }
+
         }
     };
 
+    /**
+     * despues de iniado el juego genera nuemros aletorios
+     * cada 15 segundos mientras el estado sea iniciado
+     */
     private void createNumberBingo() {
         timerNumberBingo = new Timer();
         timerNumberBingo.schedule(createNumberRandomBingo, 0, 15000);
-        log.info("Bingo service metodo createNumberBingo");
+
     }
 
+    /**
+     * esta tarea se ejecura mientras el juego este en estado
+     * iniciado
+     */
     TimerTask createNumberRandomBingo = new TimerTask() {
         @Override
         public void run() {
-            log.info("Bingo service tarea createNumberRandom 1");
+
             String status = bingodao.getEstadoJuego("","iniciado");
+
             if (status.equals("iniciado")) {
                 randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
                 if (array.size() < 1) {

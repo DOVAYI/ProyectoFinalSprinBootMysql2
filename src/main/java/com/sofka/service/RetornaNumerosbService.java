@@ -28,7 +28,7 @@ public class RetornaNumerosbService {
         idBing = idBingo();
         Bingo bingo = bingodao.getBingo(idBing);
         if (bingo.getIdb() > 0 && bingo.getIdb() != null) {
-            log.info("metodo createNumberBingo service RetornaNumerosbService ");
+
             numerosb = new Numerosb();
             numerosb.setNumeros(number);
             numerosb.setBingo(bingo);
@@ -58,16 +58,15 @@ public class RetornaNumerosbService {
 
         }
 
-        log.info("prueba numeros b service idbingo " + idbingo);
-
         return idbingo;
     }
 
     @Transactional(readOnly = true)
     public String getEstado2() {
+
         String status = null;
         status = bingodao.getEstadoJuego("iniciado","");
-        log.info("prueba numeros b service " + status);
+
         if (status == null) {
             status = bingodao.getEstadoJuego("","finalizado");
             if(status==null){

@@ -2,10 +2,21 @@ package com.sofka.utility;
 
 import java.util.ArrayList;
 
+/**
+ * esta clase permite generar los numeros aleatorios para los jugadores
+ * se utiliza de la siguiente manera
+ * GenerarNumerosAleatorios ejemplo=new GenerarNumerosAleatorios();
+ * contiene un metodo estatico(se usa sin necesidad de instanciar)
+ */
 public class GenerarNumerosAleatorios {
-
+    /**
+     * esta variable almacenara todos los numeros aleatorios generado
+     */
     Integer matriz[][] = new Integer[5][5];
 
+    /**
+     * este metodo inicializa la matriz con numeros 0
+     */
     public GenerarNumerosAleatorios() {
         Integer matrizaux[][] = new Integer[5][5];
         for (int i = 0; i < 5; i++) {
@@ -17,6 +28,10 @@ public class GenerarNumerosAleatorios {
         cargarB(this.matriz);
     }
 
+    /**
+     * Este metodo llena con numeros la primera columna de la matriz
+     * @param matriz recibe la matriz inicializada
+     */
     private void cargarB(Integer[][] matriz) {
 
         int aux = 0;
@@ -40,6 +55,10 @@ public class GenerarNumerosAleatorios {
         cargarI(this.matriz);
     }
 
+    /**
+     * Este metodo llena con numeros la segunda columna de la matriz
+     * @param matriz recibe la matriz inicializada y con la priemra columna llena
+     */
     private void cargarI(Integer[][] matriz) {
         int aux = 0;
         Integer randomNum;
@@ -63,6 +82,11 @@ public class GenerarNumerosAleatorios {
 
     }
 
+    /**
+     * Este metodo llena con numeros la tercera columna de la matriz
+     * @param matriz recibe la matriz inicializada y con la primera y segunda
+     *               columna llena
+     */
     private void cargarN(Integer[][] matriz) {
         int aux = 0;
         Integer randomNum;
@@ -84,7 +108,11 @@ public class GenerarNumerosAleatorios {
         this.matriz = matriz;
         cargarG(this.matriz);
     }
-
+    /**
+     * Este metodo llena con numeros la cuarta columna de la matriz
+     * @param matriz recibe la matriz inicializada y con la primera,segunda y tercera
+     *               columna llena
+     */
     private void cargarG(Integer[][] matriz) {
         int aux = 0;
         Integer randomNum;
@@ -106,7 +134,10 @@ public class GenerarNumerosAleatorios {
         this.matriz = matriz;
 
     }
-
+    /**
+     * Este metodo llena con numeros la quinta columna de la matriz
+     *
+     */
     public Integer[][] cargarO() {
         int aux = 0;
         Integer randomNum;
@@ -131,6 +162,10 @@ public class GenerarNumerosAleatorios {
 
     }
 
+    /**
+     * este metodo estaico para generar numeros aleatorios
+     * @return retorna numero entre 1 y 75
+     */
     public static Integer numberRandom(){
         Integer randomNum = (int) Math.floor((Math.random() * (75 - 1 + 1)) + 1);
 

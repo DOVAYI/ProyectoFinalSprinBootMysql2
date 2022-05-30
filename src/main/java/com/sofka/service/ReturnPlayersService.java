@@ -37,8 +37,10 @@ public class ReturnPlayersService {
     }
 
     public List<PlayersModel> showDataPlayers() {
+
         List<PlayersModel> dataUserMongo = loadDatasPlayers();
         List<String> idPlayersInSql = loadIdPlayers();
+
         for (int i = 0; i < idPlayersInSql.size(); i++) {
             int j = 0;
             while (j < dataUserMongo.size()) {
@@ -53,22 +55,22 @@ public class ReturnPlayersService {
         return todoPlayers;
     }
 
+    /**
+     * este metodo consulta api de creada en express y conexion a mongo
+     * para traer los datos de los usuario
+     *
+     * @return retorna lista de usuarios
+     */
     private List<PlayersModel> loadDatasPlayers() {
+
         PlayersModel[] playersModel = null;
 
-            RestTemplate restTemplate = new RestTemplate();
-            RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-            restTemplate = restTemplateBuilder.build();
+        RestTemplate restTemplate = new RestTemplate();
+        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+        restTemplate = restTemplateBuilder.build();
 
-            playersModel = restTemplate.getForObject(
-                    "http://localhost:4001/players", PlayersModel[].class);
-
-
-            log.info("prueba1 " + playersModel[0].get_id());
-            log.info("prueba2 " + playersModel[1].get_id());
-
-
-
+        playersModel = restTemplate.getForObject(
+                "http://localhost:4001/players", PlayersModel[].class);
 
         return Arrays.asList(playersModel);
     }
